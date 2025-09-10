@@ -31,6 +31,11 @@ public class TodoController {
         if (todo.getTitle() == null || todo.getTitle().trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+        
+        String title = todo.getTitle().trim();
+        if (title.length() > 30) {
+            return ResponseEntity.badRequest().build();
+        }
 
         List<Todo> todos = getAllTodos(session);
         
@@ -42,7 +47,7 @@ public class TodoController {
         }
         
         Long newId = idCounter.incrementAndGet();
-        Todo newTodo = new Todo(newId, todo.getTitle().trim());
+        Todo newTodo = new Todo(newId, title);
         todos.add(newTodo);
         
         return ResponseEntity.ok(newTodo);
