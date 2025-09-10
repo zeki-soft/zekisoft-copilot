@@ -56,9 +56,9 @@ function addTodo() {
         return;
     }
     
-    // 30文字制限の検証
-    if (title.length > 30) {
-        showErrorMessage('３０文字を超えたTODOは登録できません');
+    // 20文字制限の検証
+    if (title.length > 20) {
+        showErrorMessage('２０文字を超えたTODOは登録できません');
         todoInput.classList.add('input-error');
         todoInput.focus();
         return;

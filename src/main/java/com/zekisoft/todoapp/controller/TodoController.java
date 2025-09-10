@@ -33,7 +33,7 @@ public class TodoController {
         }
         
         String title = todo.getTitle().trim();
-        if (title.length() > 30) {
+        if (title.length() > 20) {
             return ResponseEntity.badRequest().build();
         }
 
