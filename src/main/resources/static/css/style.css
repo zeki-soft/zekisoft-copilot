@@ -194,6 +194,15 @@ body {
     animation: shake 0.5s ease-in-out;
 }
 
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+}
+
 @keyframes shake {
     0%, 20%, 40%, 60%, 80% {
         transform: translateX(0);

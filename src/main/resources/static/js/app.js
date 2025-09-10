@@ -19,6 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
     todoInput.addEventListener('blur', function() {
         this.classList.remove('input-error');
     });
+    
+    // 入力フィールドの入力時にエラーメッセージをクリア
+    todoInput.addEventListener('input', function() {
+        clearErrorMessage();
+        this.classList.remove('input-error');
+    });
 });
 
 // TODOリストを読み込む
@@ -36,10 +42,23 @@ function loadTodos() {
 // TODOを追加する
 function addTodo() {
     const todoInput = document.getElementById('todoInput');
+    const errorMessage = document.getElementById('errorMessage');
     const title = todoInput.value.trim();
+    
+    // エラーメッセージをクリア
+    clearErrorMessage();
     
     // 入力検証
     if (!title) {
+        showErrorMessage('入力がありません');
+        todoInput.classList.add('input-error');
+        todoInput.focus();
+        return;
+    }
+    
+    // 20文字制限の検証
+    if (title.length > 20) {
+        showErrorMessage('２０文字を超えたTODOは登録できません');
         todoInput.classList.add('input-error');
         todoInput.focus();
         return;
@@ -67,6 +86,7 @@ function addTodo() {
     .then(todo => {
         todoInput.value = ''; // 入力フィールドをクリア
         todoInput.classList.remove('input-error');
+        clearErrorMessage();
         loadTodos(); // TODOリストを再読み込み
     })
     .catch(error => {
@@ -145,4 +165,18 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// エラーメッセージを表示する
+function showErrorMessage(message) {
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = message;
+    errorMessage.style.display = 'block';
+}
+
+// エラーメッセージをクリアする
+function clearErrorMessage() {
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.style.display = 'none';
+    errorMessage.textContent = '';
 }
