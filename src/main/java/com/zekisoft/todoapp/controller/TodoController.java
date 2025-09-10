@@ -1,33 +1,27 @@
 package com.zekisoft.todoapp.controller;
 
 import com.zekisoft.todoapp.model.Todo;
+import com.zekisoft.todoapp.repository.TodoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/api/todos")
 public class TodoController {
 
-    private static final String TODOS_SESSION_KEY = "todos";
-    private static final String ID_COUNTER_SESSION_KEY = "idCounter";
+    @Autowired
+    private TodoRepository todoRepository;
 
     @GetMapping
-    public List<Todo> getAllTodos(HttpSession session) {
-        List<Todo> todos = (List<Todo>) session.getAttribute(TODOS_SESSION_KEY);
-        if (todos == null) {
-            todos = new ArrayList<>();
-            session.setAttribute(TODOS_SESSION_KEY, todos);
-        }
-        return todos;
+    public List<Todo> getAllTodos() {
+        return todoRepository.findAllByOrderByCreatedAtDesc();
     }
 
     @PostMapping
-    public ResponseEntity<Todo> addTodo(@RequestBody Todo todo, HttpSession session) {
+    public ResponseEntity<Todo> addTodo(@RequestBody Todo todo) {
         if (todo.getTitle() == null || todo.getTitle().trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -37,19 +31,9 @@ public class TodoController {
             return ResponseEntity.badRequest().build();
         }
 
-        List<Todo> todos = getAllTodos(session);
+        Todo newTodo = new Todo(title);
+        Todo savedTodo = todoRepository.save(newTodo);
         
-        // Get and increment ID counter
-        AtomicLong idCounter = (AtomicLong) session.getAttribute(ID_COUNTER_SESSION_KEY);
-        if (idCounter == null) {
-            idCounter = new AtomicLong(0);
-            session.setAttribute(ID_COUNTER_SESSION_KEY, idCounter);
-        }
-        
-        Long newId = idCounter.incrementAndGet();
-        Todo newTodo = new Todo(newId, title);
-        todos.add(newTodo);
-        
-        return ResponseEntity.ok(newTodo);
+        return ResponseEntity.ok(savedTodo);
     }
 }
