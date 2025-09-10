@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シンプルTODOリスト</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="app-title">シンプルTODOリスト</h1>
+        
+        <div class="todo-form">
+            <input type="text" id="todoInput" placeholder="新しいTODOを入力してください..." maxlength="100">
+            <button id="addTodoBtn" class="add-btn">追加</button>
+        </div>
+        
+        <div class="todo-list-container">
+            <ul id="todoList" class="todo-list">
+                <!-- TODOアイテムがここに動的に追加されます -->
+            </ul>
+            <div id="emptyMessage" class="empty-message">
+                <p>TODOがありません。新しいTODOを追加してください。</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/app.js?v=2"></script>
+</body>
+</html>
