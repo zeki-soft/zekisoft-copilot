@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>イシュー管理</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/issues.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navigation">
+            <a href="/" class="nav-link">TODOリスト</a>
+            <a href="/issues" class="nav-link active">イシュー管理</a>
+        </nav>
+        
+        <h1 class="app-title">イシュー管理</h1>
+        
+        <div class="issue-form">
+            <input type="text" id="issueTitleInput" placeholder="イシューのタイトルを入力してください..." maxlength="100">
+            <textarea id="issueDescriptionInput" placeholder="詳細説明（任意）..." rows="3" maxlength="500"></textarea>
+            <select id="issuePrioritySelect">
+                <option value="低">低</option>
+                <option value="中" selected>中</option>
+                <option value="高">高</option>
+            </select>
+            <button id="addIssueBtn" class="add-btn">イシューを作成</button>
+        </div>
+        
+        <div class="issue-list-container">
+            <ul id="issueList" class="issue-list">
+                <!-- イシューアイテムがここに動的に追加されます -->
+            </ul>
+            <div id="emptyIssueMessage" class="empty-message">
+                <p>イシューがありません。新しいイシューを作成してください。</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/issues.js"></script>
+</body>
+</html>

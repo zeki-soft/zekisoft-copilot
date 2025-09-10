@@ -1,0 +1,250 @@
+/* ナビゲーション */
+.navigation {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e1e8ed;
+    padding-bottom: 15px;
+}
+
+.nav-link {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #667eea;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.nav-link:hover {
+    background-color: rgba(102, 126, 234, 0.1);
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* イシューフォーム */
+.issue-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 15px;
+}
+
+#issueTitleInput {
+    padding: 15px 20px;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#issueTitleInput:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#issueDescriptionInput {
+    padding: 15px 20px;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+    resize: vertical;
+    font-family: inherit;
+}
+
+#issueDescriptionInput:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+#issuePrioritySelect {
+    padding: 15px 20px;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+#issuePrioritySelect:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* イシューリスト */
+.issue-list {
+    list-style: none;
+}
+
+.issue-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    animation: slideIn 0.3s ease;
+}
+
+.issue-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.issue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.issue-title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.issue-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.issue-priority {
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.priority-高 {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.priority-中 {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.priority-低 {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+}
+
+.issue-status {
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-未対応 {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.status-対応中 {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.status-完了 {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+}
+
+.issue-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.issue-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.status-btn {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.status-btn.start {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.status-btn.complete {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+}
+
+.status-btn.reopen {
+    background-color: #fff3e0;
+    color: #ef6c00;
+}
+
+.status-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.issue-date {
+    color: #999;
+    font-size: 12px;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .issue-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .issue-meta {
+        margin-top: 10px;
+    }
+    
+    .issue-actions {
+        flex-wrap: wrap;
+    }
+}
+
+/* エラー状態のスタイル */
+.input-error {
+    border-color: #e74c3c !important;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 20%, 40%, 60%, 80% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+}
