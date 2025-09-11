@@ -11,7 +11,10 @@ CREATE TABLE IF NOT EXISTS todo (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(20) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_created_at (created_at DESC)
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    delete_flag BOOLEAN NOT NULL DEFAULT FALSE,
+    INDEX idx_created_at (created_at DESC),
+    INDEX idx_delete_flag (delete_flag)
 ) ENGINE=InnoDB 
   CHARACTER SET utf8mb4 
   COLLATE utf8mb4_unicode_ci;

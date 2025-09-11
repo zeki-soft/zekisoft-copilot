@@ -36,4 +36,41 @@ public class TodoController {
         
         return ResponseEntity.ok(savedTodo);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo todo) {
+        if (todo.getTitle() == null || todo.getTitle().trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        String title = todo.getTitle().trim();
+        if (title.length() > 20) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        Todo existingTodo = todoRepository.findById(id);
+        if (existingTodo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        existingTodo.setTitle(title);
+        Todo updatedTodo = todoRepository.save(existingTodo);
+        
+        return ResponseEntity.ok(updatedTodo);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
+        Todo existingTodo = todoRepository.findById(id);
+        if (existingTodo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        boolean deleted = todoRepository.logicalDelete(id);
+        if (deleted) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

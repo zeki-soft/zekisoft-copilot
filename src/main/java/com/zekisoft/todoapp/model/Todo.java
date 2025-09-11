@@ -6,6 +6,8 @@ public class Todo {
     private Long id;
     private String title;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private Boolean deleteFlag;
 
     public Todo() {
     }
@@ -13,12 +15,16 @@ public class Todo {
     public Todo(String title) {
         this.title = title;
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.deleteFlag = false;
     }
 
     public Todo(Long id, String title) {
         this.id = id;
         this.title = title;
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.deleteFlag = false;
     }
 
     public Long getId() {
@@ -35,6 +41,7 @@ public class Todo {
 
     public void setTitle(String title) {
         this.title = title;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public LocalDateTime getCreatedAt() {
@@ -43,5 +50,22 @@ public class Todo {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Boolean getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(Boolean deleteFlag) {
+        this.deleteFlag = deleteFlag;
+        this.updatedAt = LocalDateTime.now();
     }
 }
