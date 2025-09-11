@@ -1,5 +1,6 @@
 package com.zekisoft.todoapp.config;
 
+import com.zekisoft.todoapp.model.Todo;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
@@ -83,6 +84,13 @@ public class DmlLoggingInterceptor implements Interceptor {
         if (parameterObject == null) {
             return "null";
         }
+        
+        if (parameterObject instanceof Todo) {
+            Todo todo = (Todo) parameterObject;
+            return String.format("Todo{id=%s, title='%s', createdAt=%s}", 
+                todo.getId(), todo.getTitle(), todo.getCreatedAt());
+        }
+        
         return parameterObject.toString();
     }
     
