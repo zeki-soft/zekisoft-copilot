@@ -6,29 +6,38 @@
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="deleteFlag" column="delete_flag"/>
     </resultMap>
     
     <select id="findAllByOrderByCreatedAtDesc" resultMap="TodoResultMap">
-        SELECT id, title, created_at
+        SELECT id, title, created_at, updated_at, delete_flag
         FROM todo
+        WHERE delete_flag = FALSE
         ORDER BY created_at DESC
     </select>
     
     <insert id="insertTodo" parameterType="com.zekisoft.todoapp.model.Todo" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO todo (title, created_at)
-        VALUES (#{title}, #{createdAt})
+        INSERT INTO todo (title, created_at, updated_at, delete_flag)
+        VALUES (#{title}, #{createdAt}, #{updatedAt}, #{deleteFlag})
     </insert>
     
     <update id="updateTodo" parameterType="com.zekisoft.todoapp.model.Todo">
         UPDATE todo
-        SET title = #{title}
-        WHERE id = #{id}
+        SET title = #{title}, updated_at = #{updatedAt}
+        WHERE id = #{id} AND delete_flag = FALSE
     </update>
     
     <select id="findById" resultMap="TodoResultMap">
-        SELECT id, title, created_at
+        SELECT id, title, created_at, updated_at, delete_flag
         FROM todo
-        WHERE id = #{id}
+        WHERE id = #{id} AND delete_flag = FALSE
     </select>
+    
+    <update id="logicalDeleteTodo">
+        UPDATE todo
+        SET delete_flag = TRUE, updated_at = #{updatedAt}
+        WHERE id = #{id} AND delete_flag = FALSE
+    </update>
     
 </mapper>

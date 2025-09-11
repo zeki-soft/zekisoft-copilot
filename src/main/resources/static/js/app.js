@@ -128,11 +128,18 @@ function createTodoItem(todo) {
     
     const listItem = document.createElement('li');
     listItem.className = 'todo-item';
+    listItem.setAttribute('data-id', todo.id);
     
     listItem.innerHTML = `
         <div class="todo-content">
-            <span class="todo-title">${escapeHtml(todo.title)}</span>
-            <span class="todo-date">${formattedDate}</span>
+            <div class="todo-left">
+                <span class="todo-title">${escapeHtml(todo.title)}</span>
+                <span class="todo-date">${formattedDate}</span>
+            </div>
+            <div class="todo-actions">
+                <button class="edit-btn" onclick="startEditTodo(${todo.id})">編集</button>
+                <button class="delete-btn" onclick="deleteTodo(${todo.id})">削除</button>
+            </div>
         </div>
     `;
     
@@ -179,4 +186,151 @@ function clearErrorMessage() {
     const errorMessage = document.getElementById('errorMessage');
     errorMessage.style.display = 'none';
     errorMessage.textContent = '';
+}
+
+// TODOの編集を開始する
+function startEditTodo(todoId) {
+    const todoItem = document.querySelector(`[data-id="${todoId}"]`);
+    if (!todoItem) return;
+    
+    const titleSpan = todoItem.querySelector('.todo-title');
+    const currentTitle = titleSpan.textContent;
+    const editBtn = todoItem.querySelector('.edit-btn');
+    const deleteBtn = todoItem.querySelector('.delete-btn');
+    
+    // 入力フィールドを作成
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'todo-title-edit';
+    input.value = currentTitle;
+    input.maxLength = 20;
+    
+    // ボタンを無効化
+    editBtn.disabled = true;
+    deleteBtn.disabled = true;
+    editBtn.textContent = '保存中...';
+    
+    // タイトルを入力フィールドに置き換え
+    titleSpan.parentNode.replaceChild(input, titleSpan);
+    input.focus();
+    input.select();
+    
+    // Enter キーまたはフォーカス離脱で保存
+    const saveEdit = () => {
+        const newTitle = input.value.trim();
+        if (newTitle && newTitle !== currentTitle && newTitle.length <= 20) {
+            updateTodo(todoId, newTitle, input, titleSpan, editBtn, deleteBtn);
+        } else if (newTitle === currentTitle) {
+            // 変更なしの場合は元に戻す
+            cancelEdit(input, titleSpan, editBtn, deleteBtn, currentTitle);
+        } else {
+            // 無効な入力の場合
+            input.focus();
+            input.style.borderColor = '#e74c3c';
+        }
+    };
+    
+    const cancelEdit = (input, titleSpan, editBtn, deleteBtn, originalTitle) => {
+        const newTitleSpan = document.createElement('span');
+        newTitleSpan.className = 'todo-title';
+        newTitleSpan.textContent = originalTitle;
+        
+        input.parentNode.replaceChild(newTitleSpan, input);
+        editBtn.disabled = false;
+        deleteBtn.disabled = false;
+        editBtn.textContent = '編集';
+    };
+    
+    // イベントリスナー
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            saveEdit();
+        }
+    });
+    
+    input.addEventListener('blur', saveEdit);
+}
+
+// TODOを更新する
+function updateTodo(todoId, newTitle, inputElement, titleElement, editBtn, deleteBtn) {
+    fetch(`/api/todos/${todoId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: newTitle })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(updatedTodo => {
+        // 成功時：新しいspan要素を作成して表示を更新
+        const newTitleSpan = document.createElement('span');
+        newTitleSpan.className = 'todo-title';
+        newTitleSpan.textContent = updatedTodo.title;
+        
+        inputElement.parentNode.replaceChild(newTitleSpan, inputElement);
+        editBtn.disabled = false;
+        deleteBtn.disabled = false;
+        editBtn.textContent = '編集';
+    })
+    .catch(error => {
+        console.error('TODOの更新に失敗しました:', error);
+        alert('TODOの更新に失敗しました。もう一度お試しください。');
+        // エラー時：新しいspan要素を作成して元のタイトルに戻す
+        const newTitleSpan = document.createElement('span');
+        newTitleSpan.className = 'todo-title';
+        newTitleSpan.textContent = titleElement.textContent; // 元のタイトルを使用
+        
+        inputElement.parentNode.replaceChild(newTitleSpan, inputElement);
+        editBtn.disabled = false;
+        deleteBtn.disabled = false;
+        editBtn.textContent = '編集';
+    });
+}
+
+// TODOを削除する
+function deleteTodo(todoId) {
+    const todoItem = document.querySelector(`[data-id="${todoId}"]`);
+    if (!todoItem) return;
+    
+    const editBtn = todoItem.querySelector('.edit-btn');
+    const deleteBtn = todoItem.querySelector('.delete-btn');
+    
+    // ボタンを無効化
+    editBtn.disabled = true;
+    deleteBtn.disabled = true;
+    deleteBtn.textContent = '削除中...';
+    
+    fetch(`/api/todos/${todoId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        // 成功時：アイテムを即座に非表示
+        todoItem.style.opacity = '0';
+        todoItem.style.transform = 'translateX(-100%)';
+        setTimeout(() => {
+            todoItem.remove();
+            // リストが空になった場合の処理
+            const todoList = document.getElementById('todoList');
+            const emptyMessage = document.getElementById('emptyMessage');
+            if (todoList.children.length === 0) {
+                emptyMessage.style.display = 'block';
+            }
+        }, 300);
+    })
+    .catch(error => {
+        console.error('TODOの削除に失敗しました:', error);
+        alert('TODOの削除に失敗しました。もう一度お試しください。');
+        // エラー時：ボタンを再有効化
+        editBtn.disabled = false;
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = '削除';
+    });
 }
