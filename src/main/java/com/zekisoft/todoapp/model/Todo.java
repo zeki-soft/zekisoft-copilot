@@ -1,19 +1,10 @@
 package com.zekisoft.todoapp.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "todo")
 public class Todo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "title", nullable = false, length = 20)
     private String title;
-    
-    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     public Todo() {
